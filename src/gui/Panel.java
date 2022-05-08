@@ -1,34 +1,36 @@
 package gui;
 
-import main.Camera;
+import main.Control;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.util.ArrayList;
 
 
 public class Panel extends JPanel {
+    // Drawing panel dimensions
     private final int WINDOW_WIDTH = 1600;
     private final int WINDOW_HEIGHT = 900;
-    private Camera camera;
-    private Line[] lines = new Line[3];
+    private Control control;    // Control needed to get projected points
+    private ArrayList<Line> lines;  // Lines to draw
 
-    public Panel (Camera c) {
+    public Panel (Control c) {
         Dimension d = new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setPreferredSize(d);
         this.setBackground(Color.DARK_GRAY);
-
-        camera = c;
+        control = c;
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        lines = camera.getLines();
+        lines = control.getProjected();
         g.setColor(Color.WHITE);
 
+        // Paint lines
         for (Line line : lines) {
-            g.drawLine(line.getStart().getX(), line.getStart().getY(),
-                    line.getEnd().getX(), line.getEnd().getY());
+            g.drawLine((int)line.getStart().getX(), (int)line.getStart().getY(),
+                    (int)line.getEnd().getX(), (int)line.getEnd().getY());
         }
     }
 
