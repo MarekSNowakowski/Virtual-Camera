@@ -50,6 +50,10 @@ public class Scene {
         return picture;
     }
 
+    public void changeFocal(double change) {
+        camera.setDistance(camera.getDistance() + change);
+    }
+
     private Point projectPoint (Point p) {
         double l = camera.getDistance() / (p.getY()-camera.getY());
 

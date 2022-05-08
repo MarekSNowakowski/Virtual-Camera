@@ -50,6 +50,18 @@ public class Control implements KeyListener {
         update = true;
     }
 
+    // Zooming in and out
+    public void changeFocal(boolean zoomIn) {
+        double fStep = 10.0;
+        if(zoomIn) {
+            scene.changeFocal(fStep);
+        }
+        else {
+            scene.changeFocal(-fStep);
+        }
+        update = true;
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyChar() == 'w')
@@ -64,6 +76,10 @@ public class Control implements KeyListener {
             translate(2, false);
         if (e.getKeyCode() == KeyEvent.VK_CONTROL)
             translate(2, true);
+        if (e.getKeyChar() == 'f')
+            changeFocal(true);
+        if (e.getKeyChar() == 'g')
+            changeFocal(false);
     }
 
     @Override
