@@ -10,10 +10,16 @@ public class Line {
     }
 
     public Point getStart() {
-        return  start;
+        return start;
     }
 
     public Point getEnd() {
         return end;
+    }
+
+    public static Line copy (Line l) {
+        Point start = new Point(l.getStart().getX(),l.getStart().getY(), l.getStart().getZ());
+        Point end = new Point(l.getEnd().getX(),l.getEnd().getY(), l.getEnd().getZ());
+        return new Line(start, end);
     }
 }
