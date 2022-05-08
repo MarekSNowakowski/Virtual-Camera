@@ -97,4 +97,8 @@ public class Scene {
             end.normalize();
         }
     }
+
+    public double getCameraY() {
+        return camera.getY();
+    }
 }

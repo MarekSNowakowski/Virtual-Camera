@@ -29,6 +29,7 @@ public class Control implements KeyListener {
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new UpdateTimer(), 250, 50);
+        CreateRotationMatrixes();
     }
 
     public Panel getPanel() {
@@ -62,6 +63,77 @@ public class Control implements KeyListener {
         update = true;
     }
 
+    private Matrix rotateXdown = new Matrix();
+    private Matrix rotateXup = new Matrix();
+    private Matrix rotateYright = new Matrix();
+    private Matrix rotateYleft = new Matrix();
+    private Matrix rotateZright = new Matrix();
+    private Matrix rotateZleft = new Matrix();
+
+    private void CreateRotationMatrixes() {
+        var rotationStep = 0.1;
+        rotateXdown  = this.makeRotationXMatrix(rotationStep);
+        rotateXup    = this.makeRotationXMatrix(-rotationStep);
+        rotateYleft  = this.makeRotationYMatrix(rotationStep);
+        rotateYright = this.makeRotationYMatrix(-rotationStep);
+        rotateZleft  = this.makeRotationZMatrix(-rotationStep);
+        rotateZright = this.makeRotationZMatrix(rotationStep);
+    }
+
+    public Matrix makeRotationXMatrix (double step) {
+        Matrix m = new Matrix();
+        double cos, sin, c;
+        c = scene.getCameraY();
+        cos = java.lang.Math.cos(step);
+        sin = java.lang.Math.sin(step);
+
+        m.setMatrixValue(1, 1, cos);
+        m.setMatrixValue(2, 1, sin);
+        m.setMatrixValue(1, 2, -sin);
+        m.setMatrixValue(2, 2, cos);
+
+        m.setMatrixValue(1, 3, c * (cos-1));
+        m.setMatrixValue(2, 3, sin*c);
+        return m;
+    }
+
+    private Matrix makeRotationYMatrix (double step) {
+        Matrix m = new Matrix();
+        double cos, sin;
+        cos = java.lang.Math.cos(step);
+        sin = java.lang.Math.sin(step);
+
+        m.setMatrixValue(0, 0, cos);
+        m.setMatrixValue(0, 2, sin);
+        m.setMatrixValue(2, 0, -sin);
+        m.setMatrixValue(2, 2, cos);
+        return m;
+    }
+
+    private Matrix makeRotationZMatrix (double step) {
+        Matrix m = new Matrix();
+        double cos, sin, c;
+        c = scene.getCameraY();
+        cos = java.lang.Math.cos(step);
+        sin = java.lang.Math.sin(step);
+
+        m.setMatrixValue(0, 0, cos);
+        m.setMatrixValue(0, 1, -sin);
+        m.setMatrixValue(1, 0, sin);
+        m.setMatrixValue(1, 1, cos);
+
+        m.setMatrixValue(0, 3, (-1)*sin*c);
+        m.setMatrixValue(1, 3, (cos-1)*c);
+        return m;
+    }
+
+    private void rotate(Matrix rotationM)
+    {
+        R.multiple(rotationM);
+        update = true;
+    }
+
+    // Key events
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyChar() == 'w')
@@ -80,6 +152,18 @@ public class Control implements KeyListener {
             changeFocal(true);
         if (e.getKeyChar() == 'g')
             changeFocal(false);
+        if (e.getKeyChar() == 'q')
+            rotate(rotateYleft);
+        if (e.getKeyChar() == 'e')
+            rotate(rotateYright);
+        if (e.getKeyCode()==KeyEvent.VK_UP)
+            rotate(rotateXup);
+        if (e.getKeyCode()==KeyEvent.VK_DOWN)
+            rotate(rotateXdown);
+        if (e.getKeyCode()==KeyEvent.VK_LEFT)
+            rotate(rotateZleft);
+        if (e.getKeyCode()==KeyEvent.VK_RIGHT)
+            rotate(rotateZright);
     }
 
     @Override
@@ -95,6 +179,8 @@ public class Control implements KeyListener {
             if (update) {
                 for (int w = 0; w < 3; w++)
                     T.setMatrixValue(w, 3, v[w]);
+
+                T.multiple(R);
                 scene.multiplyPoints(T);
                 projected = scene.project();
 
