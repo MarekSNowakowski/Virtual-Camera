@@ -1,7 +1,7 @@
 package main;
 
-
 import gui.Panel;
+import gui.Scene;
 import gui.Window;
 
 public class Main {
@@ -9,13 +9,21 @@ public class Main {
     private static Camera camera;
     private static Panel panel;
     private static Window window;
+    private static Scene scene;
 
     public static void main(String[] args) {
-        camera = new Camera();
-        panel = new Panel(camera);
+        // Load lines from the file
+        var lineData = LineLoader.loadFromFile("data.txt");
 
-        control = new Control(camera, panel);
+        // Initialize camera and scene
+        camera = new Camera(-1200,600.0);
+        scene = new Scene(camera, lineData);
+
+        // Initialize control script and gui
+        control = new Control(scene);
+        panel = control.getPanel();
         window = new Window(panel);
         window.setVisible(true);
+        window.addKeyListener(control);
     }
 }
