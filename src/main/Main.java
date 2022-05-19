@@ -13,11 +13,11 @@ public class Main {
 
     public static void main(String[] args) {
         // Load lines from the file
-        var lineData = LineLoader.loadFromFile("data.txt");
+        var figuresData = FigureLoader.loadFromFile("data.txt");
 
         // Initialize camera and scene
         camera = new Camera(-1200,600.0);
-        scene = new Scene(camera, lineData);
+        scene = new Scene(camera, figuresData);
 
         // Initialize control script and gui
         control = new Control(scene);

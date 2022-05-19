@@ -7,43 +7,43 @@ import java.util.ArrayList;
 
 public class Scene {
     private final Camera camera;
-    private ArrayList<Line> lines = new ArrayList<Line>();
+    private ArrayList<Figure> figures = new ArrayList<>();
     private int xd, zd;
 
-    public Scene(Camera camera, ArrayList<Line> lines) {
+    public Scene(Camera camera, ArrayList<Figure> figures) {
         this.camera = camera;
-        listCopy(lines);
+        listCopy(figures);
         xd = camera.WINDOW_WIDTH / 2;
         zd = camera.WINDOW_HEIGHT / 2;
     }
 
-    private void listCopy (ArrayList<Line> list) {
-        for (Line l : list) {
-            lines.add(Line.copy(l));
+    private void listCopy (ArrayList<Figure> fs) {
+        figures.clear();
+        for (Figure f : fs) {
+            figures.add(new Figure(f.GetLines()));
         }
     }
 
     public ArrayList<Line> project () {
         ArrayList<Line> picture = new ArrayList<>();
+        for (Figure figure : figures) {
+            for (Line line : figure.GetLines()) {
+                Line projectedLine;
+                var p1 = line.getStart();
+                var p2 = line.getEnd();
+                var p1visible = camera.isVisible(p1);
+                var p2visible = camera.isVisible(p2);
 
-        for (Line line : lines) {
-            Line projectedLine;
-            var p1 = line.getStart();
-            var p2 = line.getEnd();
-            var p1visible = camera.isVisible(p1);
-            var p2visible = camera.isVisible(p2);
-
-            if (p1visible && p2visible) {
-                projectedLine = new Line(projectPoint(p1), projectPoint(p2));
-                picture.add(projectedLine);
-            }
-            else if (!p1visible && p2visible) {
-                projectedLine = projectPartially(p2, p1);
-                picture.add(projectedLine);
-            }
-            else if (p1visible) {
-                projectedLine = projectPartially(p1, p2);
-                picture.add(projectedLine);
+                if (p1visible && p2visible) {
+                    projectedLine = new Line(projectPoint(p1), projectPoint(p2));
+                    picture.add(projectedLine);
+                } else if (!p1visible && p2visible) {
+                    projectedLine = projectPartially(p2, p1);
+                    picture.add(projectedLine);
+                } else if (p1visible) {
+                    projectedLine = projectPartially(p1, p2);
+                    picture.add(projectedLine);
+                }
             }
         }
 
@@ -87,14 +87,17 @@ public class Scene {
 
     public void multiplyPoints(Matrix M) {
         Point start, end;
-        for (Line l : lines) {
-            start = l.getStart();
-            start.multiply(M);
-            start.normalize();
 
-            end = l.getEnd();
-            end.multiply(M);
-            end.normalize();
+        for (Figure f : figures) {
+            for (Line l : f.GetLines()) {
+                start = l.getStart();
+                start.multiply(M);
+                start.normalize();
+
+                end = l.getEnd();
+                end.multiply(M);
+                end.normalize();
+            }
         }
     }
 

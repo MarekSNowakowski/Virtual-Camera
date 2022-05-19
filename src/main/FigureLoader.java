@@ -1,12 +1,14 @@
 package main;
 
 import java.util.ArrayList;
+
+import gui.Figure;
 import gui.Line;
 import gui.Point;
 import java.io.*;
 
-public class LineLoader {
-    public static ArrayList<Line> loadFromFile(String filename) {
+public class FigureLoader {
+    public static ArrayList<Figure> loadFromFile(String filename) {
         try {
             var fileStream = new FileInputStream(filename);
             var inputStream = new DataInputStream(fileStream);
@@ -16,11 +18,16 @@ public class LineLoader {
             String[] splited;
 
             ArrayList<Line> lines = new ArrayList<>();
+            ArrayList<Figure> figures = new ArrayList<>();
             Point start, end;
 
             double[] d = new double[6];
             while ((line = bufferedReader.readLine()) != null) {
-                if (line.length() == 0) continue;
+                if (line.length() == 0) {
+                    figures.add(new Figure(lines));
+                    lines.clear();
+                    continue;
+                }
                 splited = line.split(";");
 
                 for (int i=0; i<6; i++) {
@@ -33,7 +40,7 @@ public class LineLoader {
             }
             inputStream.close();
             fileStream.close();
-            return lines;
+            return figures;
         } catch (Exception ex) {
             System.out.println(ex);
             return null;
