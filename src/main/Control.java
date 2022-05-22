@@ -1,4 +1,5 @@
 package main;
+import gui.Figure;
 import gui.Line;
 import gui.Panel;
 import gui.Scene;
@@ -15,7 +16,7 @@ public class Control implements KeyListener {
     private final Matrix T = new Matrix();         // macierz translacji
     private final Matrix R = new Matrix();         // macierz rotacji
     private final Scene scene;
-    private ArrayList<Line> projected;
+    private ArrayList<Figure> projected;
     private boolean update = true;
 
     public Control(Scene scene) {
@@ -36,7 +37,7 @@ public class Control implements KeyListener {
         return panel;
     }
 
-    public ArrayList<Line> getProjected () {
+    public ArrayList<Figure> getProjected () {
         return projected;
     }
 

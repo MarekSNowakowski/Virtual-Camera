@@ -2,6 +2,7 @@ package gui;
 
 import main.Camera;
 import main.Matrix;
+import main.PlaneSorting;
 
 import java.util.ArrayList;
 
@@ -20,13 +21,16 @@ public class Scene {
     private void listCopy (ArrayList<Figure> fs) {
         figures.clear();
         for (Figure f : fs) {
-            figures.add(new Figure(f.GetLines()));
+            Figure fn = new Figure(f.GetLines());
+            fn.color = f.color;
+            figures.add(fn);
         }
     }
 
-    public ArrayList<Line> project () {
-        ArrayList<Line> picture = new ArrayList<>();
+    public ArrayList<Figure> project () {
+        ArrayList<Figure> picture = new ArrayList<>();
         for (Figure figure : figures) {
+            ArrayList<Line> figureLines = new ArrayList<Line>();
             for (Line line : figure.GetLines()) {
                 Line projectedLine;
                 var p1 = line.getStart();
@@ -36,15 +40,18 @@ public class Scene {
 
                 if (p1visible && p2visible) {
                     projectedLine = new Line(projectPoint(p1), projectPoint(p2));
-                    picture.add(projectedLine);
+                    figureLines.add(projectedLine);
                 } else if (!p1visible && p2visible) {
                     projectedLine = projectPartially(p2, p1);
-                    picture.add(projectedLine);
+                    figureLines.add(projectedLine);
                 } else if (p1visible) {
                     projectedLine = projectPartially(p1, p2);
-                    picture.add(projectedLine);
+                    figureLines.add(projectedLine);
                 }
             }
+            Figure f = new Figure(figureLines);
+            f.color = figure.color;
+            picture.add(f);
         }
 
         return picture;
