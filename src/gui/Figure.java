@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Figure {
     private ArrayList<Line> lines = new ArrayList<>();
@@ -29,10 +30,22 @@ public class Figure {
     }
 
     public double [] getPlaneEqation() {
-        //we need at least 3 points to determine a plane
-        Point P = lines.get(0).getStart();
-        Point Q = lines.get(1).getStart();
-        Point R = lines.get(2).getStart();
+        var points = getPoints();
+
+        Point P = points.get(0);
+        Point Q = null;
+        Point R = null;
+
+        for (Point p : points) {
+            if(Q == null && (p.getX() != P.getX() || p.getY() != P.getY() || p.getZ() != P.getZ())){
+                Q = p;
+            }
+            else if(Q!=null && (p.getX() != P.getX() || p.getY() != P.getY() || p.getZ() != P.getZ()) &&
+                    (p.getX() != Q.getX() || p.getY() != Q.getY() || p.getZ() != Q.getZ())){
+                R = p;
+                break;
+            }
+        }
         double [] PQ = new double []{Q.getX() - P.getX(), Q.getY() - P.getY(), Q.getZ() - P.getZ()};
         double [] PR = new double []{R.getX() - P.getX(), R.getY() - P.getY(), R.getZ() - P.getZ()};
 
@@ -41,7 +54,6 @@ public class Figure {
         double c = PQ[0]*PR[1] - PQ[1]*PR[0];
         double d = a*P.getX() + b*P.getY() + c*P.getZ();
 
-        // a*x + b*y + c*z - d = 0
         return new double []{a,b,c,-d};
     }
 }
