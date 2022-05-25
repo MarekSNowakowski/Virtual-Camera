@@ -2,9 +2,11 @@ package gui;
 
 import main.Camera;
 import main.Matrix;
+import main.PaintersAlgorithm;
 import main.PlaneSorting;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Scene {
     private final Camera camera;
@@ -30,7 +32,7 @@ public class Scene {
     public ArrayList<Figure> project () {
         ArrayList<Figure> picture = new ArrayList<>();
         for (Figure figure : figures) {
-            ArrayList<Line> figureLines = new ArrayList<Line>();
+            ArrayList<Line> figureLines = new ArrayList<>();
             for (Line line : figure.GetLines()) {
                 Line projectedLine;
                 var p1 = line.getStart();
@@ -53,7 +55,6 @@ public class Scene {
             f.color = figure.color;
             picture.add(f);
         }
-
         return picture;
     }
 
@@ -106,6 +107,10 @@ public class Scene {
                 end.normalize();
             }
         }
+    }
+
+    public void SortFigures() {
+        PlaneSorting.Sort(figures);
     }
 
     public double getCameraY() {

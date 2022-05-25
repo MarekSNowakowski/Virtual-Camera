@@ -183,6 +183,7 @@ public class Control implements KeyListener {
 
                 T.multiple(R);
                 scene.multiplyPoints(T);
+                scene.SortFigures();
                 projected = scene.project();
 
                 R.createI();

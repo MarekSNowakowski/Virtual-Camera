@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 import gui.Figure;
@@ -20,11 +21,18 @@ public class FigureLoader {
             ArrayList<Line> lines = new ArrayList<>();
             ArrayList<Figure> figures = new ArrayList<>();
             Point start, end;
-
+            Color color = new Color((int)(Math.random() * 0x1000000));
             double[] d = new double[6];
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.length() == 0) {
-                    figures.add(new Figure(lines));
+                    Figure figure = new Figure(lines);
+                    figure.color = color;
+                    figures.add(figure);
+                    lines.clear();
+                    continue;
+                }
+                if (line.length() == 1) {
+                    color = new Color((int)(Math.random() * 0x1000000));
                     lines.clear();
                     continue;
                 }

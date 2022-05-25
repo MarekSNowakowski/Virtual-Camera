@@ -46,7 +46,6 @@ public class Panel extends JPanel {
                     i = 0;
                 }
             }
-            //g.drawPolygon(p);
         }
     }
 
