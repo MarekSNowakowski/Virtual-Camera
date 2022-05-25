@@ -2,11 +2,9 @@ package gui;
 
 import main.Camera;
 import main.Matrix;
-import main.PaintersAlgorithm;
 import main.PlaneSorting;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Scene {
     private final Camera camera;
